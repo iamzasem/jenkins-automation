@@ -1,6 +1,0 @@
-version : "3.3"
-services :
-  web :
-     image : lalbudha47/static-web-dashboard:latest
-     ports :
-         - "80:80"

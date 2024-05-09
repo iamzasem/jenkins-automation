@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment{
+        DOCKER_IMAGE = 'lalbudha47/static-web-dashboard'
+        CONTAINER_NAME = 'static-web-dashboard-container'
+    }
+
     stages {
         stage ('Fetch Code') {
             steps{
@@ -27,10 +32,19 @@ pipeline {
             }
         }
 
-        stage ('Deploy') {
+        stage('Deploy') {
             steps {
-                echo 'Deploying to docker container'
-                sh 'docker-compose down && docker-compose up -d'
+                echo 'Deploying to container'
+                sh "docker pull ${DOCKER_IMAGE}"
+                
+                echo 'Stopping previous container'
+                sh "docker stop ${CONTAINER_NAME} || true"
+                
+                echo 'Removing previous container'
+                sh "docker rm ${CONTAINER_NAME} || true"
+                
+                echo 'Starting new container'
+                sh "docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_IMAGE}"
             }
         }
     }
