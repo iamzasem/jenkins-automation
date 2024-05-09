@@ -5,7 +5,7 @@ pipeline {
         stage ('Fetch Code') {
             steps{
                 echo 'Cloning Code From Github'
-                git url:'https://github.com/codeboylal/Project-8-Django-new-todo.git', branch: 'main'
+                git url:'https://github.com/codeboylal/static-website-dashboard.git', branch: 'main'
             }
         }
         
@@ -30,7 +30,7 @@ pipeline {
         stage ('Deploy') {
             steps {
                 echo 'Deploying to docker container'
-                sh 'docker-compose down -d && docker-compose up -d'
+                sh 'docker-compose down && docker-compose up -d'
             }
         }
     }
