@@ -1,19 +1,22 @@
 pipeline {
     agent any
 
-    environment{
-        DOCKER_IMAGE = 'lalbudha47/static-web-dashboard'
-        CONTAINER_NAME = 'static-web-dashboard-container'
-    }
+    // environment{
+    //     DOCKER_IMAGE = 'lalbudha47/static-web-dashboard'
+    //     CONTAINER_NAME = 'static-web-dashboard-container'
+    // }
 
     
     stages {
-        // stage ('Repository Scan') {
-        //     steps{
-        //         echo 'Trivy Repository Scanning'
-        //         sh 'trivy repo https://github.com/codeboylal/static-website-dashboard.git'
-        //     }
-        // }
+
+        // Repository Scann
+
+        stage ('Repository Scan') {
+            steps{
+                echo 'Trivy Repository Scanning'
+                sh 'trivy repo https://github.com/codeboylal/static-website-dashboard.git'
+            }
+        }
 
         stage ('Fetch Code From GitHub') {
             steps{
@@ -22,12 +25,12 @@ pipeline {
             }
         }
         
-        stage ('Repository Scan With Trivy') {
-            steps{
-                echo 'Trivy Repository Scanning'
-                sh 'trivy repo https://github.com/codeboylal/static-website-dashboard.git'
-            }
-        }
+        // stage ('Repository Scan With Trivy') {
+        //     steps{
+        //         echo 'Trivy Repository Scanning'
+        //         sh 'trivy repo https://github.com/codeboylal/static-website-dashboard.git'
+        //     }
+        // }
 
         stage ('Building Code With Docker') {
             steps{
@@ -44,6 +47,14 @@ pipeline {
                 sh 'trivy image static-web-dashboard --format=table --output=trivy_image_scan_report_table.txt'
             }
         }
+
+        // Uploading Scanned Report to Any Cloud Platform
+
+        // stage('Upload Scan report to AWS S3') {
+        //       steps {
+        //           sh 'aws s3 cp report.html s3://devsecops-project/'
+        //       }
+        //  }
         
         stage ('Push to DockerHub') {
             steps {
@@ -56,19 +67,32 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        // Deploy to Docker Container
+
+        // stage('Deploy') {
+        //     steps {
+        //         echo 'Deploying to container'
+        //         sh "docker pull ${DOCKER_IMAGE}"
+                
+        //         echo 'Stopping previous container'
+        //         sh "docker stop ${CONTAINER_NAME} || true"
+                
+        //         echo 'Removing previous container'
+        //         sh "docker rm ${CONTAINER_NAME} || true"
+                
+        //         echo 'Starting new container'
+        //         sh "docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_IMAGE}"
+        //     }
+        // }
+
+
+        // Deploy to Kuberneter Cluster
+
+        stage('Deploy to K8S Cluster') {
             steps {
-                echo 'Deploying to container'
-                sh "docker pull ${DOCKER_IMAGE}"
-                
-                echo 'Stopping previous container'
-                sh "docker stop ${CONTAINER_NAME} || true"
-                
-                echo 'Removing previous container'
-                sh "docker rm ${CONTAINER_NAME} || true"
-                
-                echo 'Starting new container'
-                sh "docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_IMAGE}"
+                script{
+                    kubernetesDeploy configs: 'static-website-deployment.yaml', kubeconfigId: 'minikube-jenkins'
+                }
             }
         }
     }
