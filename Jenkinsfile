@@ -6,21 +6,45 @@ pipeline {
         CONTAINER_NAME = 'static-web-dashboard-container'
     }
 
+    
     stages {
-        stage ('Fetch Code') {
+        // stage ('Repository Scan') {
+        //     steps{
+        //         echo 'Trivy Repository Scanning'
+        //         sh 'trivy repo https://github.com/codeboylal/static-website-dashboard.git'
+        //     }
+        // }
+
+        stage ('Fetch Code From GitHub') {
             steps{
                 echo 'Cloning Code From Github'
                 git url:'https://github.com/codeboylal/static-website-dashboard.git', branch: 'main'
             }
         }
         
-        stage ('Building Code') {
+        stage ('Repository Scan With Trivy') {
+            steps{
+                echo 'Trivy Repository Scanning'
+                sh 'trivy repo https://github.com/codeboylal/static-website-dashboard.git'
+            }
+        }
+
+        stage ('Building Code With Docker') {
             steps{
                 echo 'Building Code to Docker'
                 sh 'docker build -t static-web-dashboard .'       
             }
         }
 
+        stage ('Image Scanning WithTrivy') {
+            steps{
+                echo 'Scanning Build Image With Trivy'
+               //  sh 'trivy image lalbudha47/static-web-dashboard'
+               //  sh 'trivy image static-web-dashboard --format=json --output=trivy_image_scan_report.json'
+                sh 'trivy image static-web-dashboard --format=table --output=trivy_image_scan_report_table.txt'
+            }
+        }
+        
         stage ('Push to DockerHub') {
             steps {
                 echo 'Pushing image to dockerhub'
