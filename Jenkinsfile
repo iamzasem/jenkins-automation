@@ -42,11 +42,12 @@ pipeline {
 
         // Uploading Scanned Report to Any Cloud Platform
 
-        // stage('Upload Scan report to AWS S3') {
-        //       steps {
-        //           sh 'aws s3 cp report.html s3://devsecops-project/'
-        //       }
-        //  }
+        stage('Upload Scan Report to AWS S3') {
+              steps {
+                echo 'Uploading trivy scanned report to AWS S3'
+                sh 'aws s3 cp trivy_image_scan_report_table.txt s3:/jenkins12112/'
+              }
+         }
         
         stage ('Push to DockerHub') {
             steps {
