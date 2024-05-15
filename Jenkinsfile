@@ -67,7 +67,7 @@ pipeline {
                                     noUploadOnFailure: false,
                                     selectedRegion: 'us-east-1',
                                     showDirectlyInBrowser: false,
-                                    sourceFile: '**/*',
+                                    sourceFile: '**/*.txt, **/*.pdf',
                                     storageClass: 'STANDARD',
                                     uploadFromSlave: false,
                                     useServerSideEncryption: false]],
