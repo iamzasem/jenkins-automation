@@ -91,7 +91,7 @@ pipeline {
         stage('Deploy to K8S Cluster') {
             steps {
                 script{
-                    kubernetesDeploy configs: 'static-website-deployment.yaml', kubeconfigId: 'minikube-jenkins'
+                    kubernetesDeploy configs: 'static-website-deployment.yaml', kubeconfigId: 'Minikube'
                 }
             }
         }
