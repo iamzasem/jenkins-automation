@@ -67,33 +67,33 @@ pipeline {
             }
         }
 
-        // Deploy to Docker Container
+        Deploy to Docker Container
 
-        // stage('Deploy') {
-        //     steps {
-        //         echo 'Deploying to container'
-        //         sh "docker pull ${DOCKER_IMAGE}"
-                
-        //         echo 'Stopping previous container'
-        //         sh "docker stop ${CONTAINER_NAME} || true"
-                
-        //         echo 'Removing previous container'
-        //         sh "docker rm ${CONTAINER_NAME} || true"
-                
-        //         echo 'Starting new container'
-        //         sh "docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_IMAGE}"
-        //     }
-        // }
-
-
-        // Deploy to Kuberneter Cluster
-
-        stage('Deploy to K8S Cluster') {
+        stage('Deploy') {
             steps {
-                script{
-                    kubernetesDeploy configs: 'static-website-deployment.yaml', kubeconfigId: 'Minikube'
-                }
+                echo 'Deploying to container'
+                sh "docker pull ${DOCKER_IMAGE}"
+                
+                echo 'Stopping previous container'
+                sh "docker stop ${CONTAINER_NAME} || true"
+                
+                echo 'Removing previous container'
+                sh "docker rm ${CONTAINER_NAME} || true"
+                
+                echo 'Starting new container'
+                sh "docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_IMAGE}"
             }
         }
+
+
+        // // Deploy to Kuberneter Cluster
+
+        // stage('Deploy to K8S Cluster') {
+        //     steps {
+        //         script{
+        //             kubernetesDeploy configs: 'static-website-deployment.yaml', kubeconfigId: 'Minikube'
+        //         }
+        //     }
+        // }
     }
 }
