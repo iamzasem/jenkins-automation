@@ -1,11 +1,10 @@
 pipeline {
     agent any
 
-    // environment{
-    //     DOCKER_IMAGE = 'lalbudha47/static-web-dashboard'
-    //     CONTAINER_NAME = 'static-web-dashboard-container'
-    // }
-
+    environment{
+        DOCKER_IMAGE = 'lalbudha47/static-web-dashboard'
+        CONTAINER_NAME = 'static-web-dashboard-container'
+    }
     
     stages {
 
@@ -24,13 +23,6 @@ pipeline {
                 git url:'https://github.com/codeboylal/static-website-dashboard.git', branch: 'main'
             }
         }
-        
-        // stage ('Repository Scan With Trivy') {
-        //     steps{
-        //         echo 'Trivy Repository Scanning'
-        //         sh 'trivy repo https://github.com/codeboylal/static-website-dashboard.git'
-        //     }
-        // }
 
         stage ('Building Code With Docker') {
             steps{
@@ -67,7 +59,7 @@ pipeline {
             }
         }
 
-        Deploy to Docker Container
+        // Deploy to Docker Container
 
         stage('Deploy') {
             steps {
