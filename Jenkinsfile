@@ -105,8 +105,7 @@ pipeline {
                 sh "docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_IMAGE}"
             }
         }
-
-
+        
         // // Deploy to Kuberneter Cluster
 
         // stage('Deploy to K8S Cluster') {
@@ -116,5 +115,6 @@ pipeline {
         //         }
         //     }
         // }
+
     }
 }
