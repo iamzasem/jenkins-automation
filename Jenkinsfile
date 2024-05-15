@@ -45,9 +45,16 @@ pipeline {
         stage('Upload Scan Report to AWS S3') {
               steps {
                 echo 'Uploading trivy scanned report to AWS S3'
-                sh 'aws s3 cp trivy_image_scan_report_table.txt s3://jenkins12112/'
+                // sh 'aws s3 cp trivy_image_scan_report_table.txt s3://jenkins12112/'
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'jenkins12112', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-iso-east-1', showDirectlyInBrowser: false, sourceFile: '**/*', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'Jenkins - Trivy - S3 - Upload', userMetadata: []
               }
          }
+
+
+
+
+
+
         
         stage ('Push to DockerHub') {
             steps {
