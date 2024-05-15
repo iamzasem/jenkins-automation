@@ -67,7 +67,7 @@ pipeline {
                                     noUploadOnFailure: false,
                                     selectedRegion: 'us-east-1',
                                     showDirectlyInBrowser: false,
-                                    sourceFile: 'trivy_image_scan_report_table.txt',
+                                    sourceFile: '**/*',
                                     storageClass: 'STANDARD',
                                     uploadFromSlave: false,
                                     useServerSideEncryption: false]],
