@@ -10,28 +10,28 @@ pipeline {
 
         // Repository Scann
 
-        stage ('Repository Scan') {
+        stage ('Repository Scan - Trivy') {
             steps{
                 echo 'Trivy Repository Scanning'
                 sh 'trivy repo https://github.com/codeboylal/static-website-dashboard.git'
             }
         }
 
-        stage ('Fetch Code From GitHub') {
+        stage ('Fetch Code - GitHub') {
             steps{
                 echo 'Cloning Code From Github'
                 git url:'https://github.com/codeboylal/static-website-dashboard.git', branch: 'main'
             }
         }
 
-        stage ('Building Code With Docker') {
+        stage ('Building Code - Docker') {
             steps{
                 echo 'Building Code to Docker'
                 sh 'docker build -t static-web-dashboard .'       
             }
         }
 
-        stage ('Image Scanning WithTrivy') {
+        stage ('Image Scanning - Trivy') {
             steps{
                 echo 'Scanning Build Image With Trivy'
                //  sh 'trivy image lalbudha47/static-web-dashboard'
@@ -40,19 +40,8 @@ pipeline {
             }
         }
 
-        // Uploading Scanned Report to Any Cloud Platform
-
-        // stage('Upload Scan Report to AWS S3') {
-        //       steps {
-        //         echo 'Uploading trivy scanned report to AWS S3'
-        //         // sh 'aws s3 cp trivy_image_scan_report_table.txt s3://jenkins-trivy/'
-        //         // s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'jenkins-trivy', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-iso-east-1', showDirectlyInBrowser: false, sourceFile: '**/*', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'Jenkins-s3-trivy-upload', userMetadata: []
-        //         // s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, pluginFailureResultConstraint: 'FAILURE', profileName: 'Jenkins-s3-trivy-upload', userMetadata: []
-        //         s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: '', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-iso-east-1', showDirectlyInBrowser: false, sourceFile: '**/*.txt', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'Jenkins-s3-trivy-upload', userMetadata: []
-        //       }
-        //  }
-      
-        stage('Upload Scan Report to AWS S3') {
+     // Trivy Generated report upload to AWS S3      
+        stage('Upload Report - S3') {
             steps {
                 echo 'Uploading trivy scanned report to AWS S3'
                 s3Upload consoleLogLevel: 'INFO',
@@ -77,7 +66,7 @@ pipeline {
             }
         }
 
-        stage ('Push to DockerHub') {
+        stage ('Push Image - DockerHub') {
             steps {
                 echo 'Pushing image to dockerhub'
                 withCredentials([usernamePassword(credentialsId: 'static-web-connection', usernameVariable: 'dockerhubUser', passwordVariable: 'dockerhubPass')]) {
@@ -90,7 +79,7 @@ pipeline {
 
         // Deploy to Docker Container
 
-        stage('Deploy') {
+        stage('Deploy - Docker') {
             steps {
                 echo 'Deploying to container'
                 sh "docker pull ${DOCKER_IMAGE}"
