@@ -20,8 +20,8 @@ pipeline {
             steps{
                 echo 'Running Code to Docker'
                 sh '''
-                    docker stop $(docker ps -q --filter ancestor=my-static-image) || true
-                    docker rm $(docker ps -aq --filter ancestor=my-static-image) || true
+                docker ps -q | xargs -r docker stop
+                docker ps -aq | xargs -r docker rm
                 '''
                 sh 'docker run -d -p 3030:80 my-static-image'
             }
