@@ -19,7 +19,7 @@ pipeline {
         stage ('Running Code - Docker') {
             steps{
                 echo 'Running Code to Docker'
-                sh 'docker run -d -p 80:80 my-static-image'
+                sh 'docker run -d -p 3030:80 my-static-image'
             }
         }
     }
