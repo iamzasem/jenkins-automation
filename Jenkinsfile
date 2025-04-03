@@ -5,7 +5,7 @@ pipeline {
         stage ('Fetch Code') {
             steps{
                 echo 'Cloning Code From Github'
-                git url:'https://github.com/codeboylal/static-website-dashboard.git', branch: 'devops'
+                git url:'https://github.com/iamzasem/jenkins-automation/', branch: 'devops'
             }
         }
 
