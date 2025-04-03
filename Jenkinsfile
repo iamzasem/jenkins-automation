@@ -12,7 +12,7 @@ pipeline {
         stage ('Building Code - Docker') {
             steps{
                 echo 'Building Code to Docker'
-                sh 'docker build -t my-static-image .'       
+                sh 'sudo docker build -t my-static-image .'       
             }
         }
 
@@ -22,10 +22,10 @@ pipeline {
             steps{
                 echo 'Running Code to Docker'
                 sh '''
-                docker ps -q | xargs -r docker stop
-                docker ps -aq | xargs -r docker rm
+               sudo docker ps -q | xargs -r docker stop
+                sudo docker ps -aq | xargs -r docker rm
                 '''
-                sh 'docker run -d -p 3030:80 my-static-image'
+                sh 'sudo docker run -d -p 3030:80 my-static-image'
             }
         }
     }
